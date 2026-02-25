@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { HTTP_STATUS } from "../../../constants/httpConstants";
+import { HTTP_STATUS } from "../../../constant/httpConstant";
 import * as eventService from "../services/eventServices";
 
 // Get all events
