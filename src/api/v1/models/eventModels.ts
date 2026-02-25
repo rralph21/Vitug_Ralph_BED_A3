@@ -1,4 +1,4 @@
-export interface Post {
+export interface Event {
     id: string;
     userId: string;
     content: string;
