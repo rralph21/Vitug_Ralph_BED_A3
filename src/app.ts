@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-// import ticketRoutes from "./api/v1/"
+import eventRoutes from "./api/v1/routes/eventRoutes"
 
 
 // Initialize Express application
@@ -7,7 +7,7 @@ const app: Express = express();
 
 app.use(express.json());
 
-// app.use("/api/v1");
+app.use("/api/v1");
 
 // Sample healt check
 app.get("/api/v1/health", (req, res) => {
@@ -21,7 +21,6 @@ app.get("/api/v1/health", (req, res) => {
 
 // Define a route
 app.get("/", (req, res) => {
-    res.send("Hello, World!");
+    res.send("It's Online!!");
 });
-
 export default app;
