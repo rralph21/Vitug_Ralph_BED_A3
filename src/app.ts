@@ -5,9 +5,9 @@ import eventRoutes from "./api/v1/routes/eventRoutes"
 // Initialize Express application
 const app: Express = express();
 
-app.use(express.json());
+app.use("/api/v1", eventRoutes)
 
-app.use("/api/v1");
+app.use(express.json());
 
 // Sample healt check
 app.get("/api/v1/health", (req, res) => {
