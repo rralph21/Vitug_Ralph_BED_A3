@@ -1,4 +1,8 @@
+import { sampleEvent } from "../models/eventModels";
+import { getAllEventsAsync } from "../repositories/eventRepositories";
 import express, { Express } from "express";
+import { event } from "../data/eventData"
+
 
 export interface Attendee {
     id: number;
@@ -13,17 +17,6 @@ export interface Event {
     capacity: number;
     registrationCount: number;
 }
-
-const attendee: Attendee[] = [
-    { id: 1, name: "Jordan Smith", email: "jordan.smith@email.com" },
-    { id: 2, name: "Alex Chen", email: "alex.chen@email.com" }
-]
-
-const event: Event[] = [
-    { id: 1, name: "Tech Conference 2025", date: new Date().toISOString(), capacity: 200, registrationCount: 185 },
-    { id: 2, name: "Startup Pitch Night", date: new Date().toISOString(), capacity: 50, registrationCount: 12 },
-    { id: 3, name: "Web Dev Workshop", date: new Date().toISOString(), capacity: 30, registrationCount: 30 }
-]
 
 // calculates popularity based on capacityu and registrationCount
 export function popularityScore(capacity: number, registrationCount: number) {
@@ -61,6 +54,12 @@ export function popularityScore(capacity: number, registrationCount: number) {
 export function getAllEvents() {
     return event;
 }
+
+// get all event function from firestore
+export const getAllEventsDb = async (): Promise<sampleEvent[]> => {
+    return getAllEventsAsync();
+};
+
 
 export function getEventById(id: number) {
     return event.find(e => e.id === id);

@@ -1,18 +1,16 @@
 import { db } from "../../../config/firebaseConfig";
 import { DocumentReference } from "firebase-admin/firestore";
-import { Event } from "../models/eventModels"
+import { sampleEvent } from "../models/eventModels";
 
 
-export const getAllEventsAsync = async (): Promise<Event[]> => {
+export const getAllEventsAsync = async (): Promise<sampleEvent[]> => {
   const snapshot = await db.collection("events").get();
 
   return snapshot.docs.map((doc) => {
     const data = doc.data() as any;
 
-    const id = data.id ?? doc.id;
-
     return {
-      id,
+      id: data.id ?? doc.id,
       name: data.name,
       date: data.date,
       capacity: Number(data.capacity),
@@ -21,8 +19,9 @@ export const getAllEventsAsync = async (): Promise<Event[]> => {
       category: data.category,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
-    } as Event;
+    };
   });
+};
 
 // export const addDocument = async (): Promise<void> => {
 //     // Create a reference to a document in the 'users' collection with ID 'user1'
@@ -37,4 +36,3 @@ export const getAllEventsAsync = async (): Promise<Event[]> => {
 //         age: 30,
 //     });
 //     console.log("Document added");
-};
