@@ -1,6 +1,6 @@
 import express, { Express } from "express";
 import eventRoutes from "./api/v1/routes/eventRoutes"
-import morgan from "node_modules/@types/morgan";
+import morgan from "morgan";
 
 
 // Initialize Express application

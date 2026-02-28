@@ -3,7 +3,7 @@ import { HTTP_STATUS } from "../../../constant/httpConstant";
 import * as eventService from "../services/eventServices";
 
 // Get all events
-export const getEvents = async(req: Request, res: Response): Promise<void> => {
+export const getEvents = async (req: Request, res: Response): Promise<void> => {
     const events = await eventService.getAllEvents();
 
     res.status(HTTP_STATUS.OK).json({
@@ -62,10 +62,10 @@ export const getEventPopularity = (req: Request, res: Response): void => {
     });
 };
 
-// Post 
-// creating an event that requires name, date and capacity
-export const createEvent = (req: Request, res: Response): void => {
-    const { name, date, capacity } = req.body;
+// creating an event aync
+
+export const createEvent = async (req: Request, res: Response): Promise<void> => {
+    const { name, date, capacity, registrationCount, status, category } = req.body;
 
     if (!name || !date || capacity === undefined) {
         res.status(HTTP_STATUS.BAD_REQUEST).json({
@@ -74,10 +74,13 @@ export const createEvent = (req: Request, res: Response): void => {
         return;
     }
 
-    const newEvent = eventService.createEvent(
+    const newEvent = await eventService.createEventDb(
         String(name),
         String(date),
-        Number(capacity)
+        Number(capacity),
+        registrationCount !== undefined ? Number(registrationCount) : 0,
+        status !== undefined ? String(status) : "active",
+        category !== undefined ? String(category) : "general"
     );
 
     res.status(HTTP_STATUS.CREATED).json({

@@ -1,28 +1,46 @@
 import { db } from "../../../config/firebaseConfig";
-import { DocumentReference } from "firebase-admin/firestore";
 import { sampleEvent } from "../models/eventModels";
 
-
+// get all events async
 export const getAllEventsAsync = async (): Promise<sampleEvent[]> => {
-  const snapshot = await db.collection("events").get();
+    const snapshot = await db.collection("events").get();
 
-  return snapshot.docs.map((doc) => {
-    const data = doc.data() as any;
+    return snapshot.docs.map((doc) => {
+        const data = doc.data() as any;
 
-    return {
-      id: data.id ?? doc.id,
-      name: data.name,
-      date: data.date,
-      capacity: Number(data.capacity),
-      registrationCount: Number(data.registrationCount),
-      status: data.status,
-      category: data.category,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    };
-  });
+        return {
+            id: data.id ?? doc.id,
+            name: data.name,
+            date: data.date,
+            capacity: Number(data.capacity),
+            registrationCount: Number(data.registrationCount),
+            status: data.status,
+            category: data.category,
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+        };
+    });
 };
 
+
+// Creates a new event document in Firestore
+export const createEventAsync = async (
+    payload: Omit<sampleEvent, "createdAt" | "updatedAt">
+): Promise<sampleEvent> => {
+    const now = new Date().toISOString();
+
+    const docRef = db.collection("events").doc();
+
+    const newDoc: sampleEvent = {
+        ...payload,
+        createdAt: now,
+        updatedAt: now,
+    };
+
+    await docRef.set(newDoc);
+
+    return newDoc;
+};
 // export const addDocument = async (): Promise<void> => {
 //     // Create a reference to a document in the 'users' collection with ID 'user1'
 //     // If the document doesn't exist, it will be created
