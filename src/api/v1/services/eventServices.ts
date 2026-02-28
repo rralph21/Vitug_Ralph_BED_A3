@@ -1,6 +1,5 @@
 import { sampleEvent } from "../models/eventModels";
-import { getAllEventsAsync } from "../repositories/eventRepositories";
-import express, { Express } from "express";
+import { getAllEventsAsync, createEventAsync } from "../repositories/eventRepositories";
 import { event } from "../data/eventData"
 
 
@@ -65,55 +64,78 @@ export function getEventById(id: number) {
     return event.find(e => e.id === id);
 }
 
-export function createEvent(name: string, date: string, capacity: number) {
-    const newId = event.length + 1;
+// // creating an event
+// export function createEvent(name: string, date: string, capacity: number) {
+//     const newId = event.length + 1;
 
-    const newEvent: Event = {
-        id: newId,
+//     const newEvent: Event = {
+//         id: newId,
+//         name,
+//         date,
+//         capacity,
+//         registrationCount: 0,
+//     };
+
+//     event.push(newEvent);
+//     return newEvent;
+// }
+
+// creating an event async
+export const createEventDb = async (
+    name: string,
+    date: string,
+    capacity: number,
+    registrationCount = 0,
+    status = "active",
+    category = "general"
+): Promise<sampleEvent> => {
+    const id = `evt_${Date.now()}`;
+
+    return createEventAsync({
+        id,
         name,
         date,
         capacity,
-        registrationCount: 0,
-    };
+        registrationCount,
+        status,
+        category,
+    });
+};
 
-     event.push(newEvent);
-  return newEvent;
-}
-   export function updateEvent(id: number, data: any) {
-  const event = getEventById(id);
+export function updateEvent(id: number, data: any) {
+    const event = getEventById(id);
 
-  if (!event) {
-    return null;
-  }
+    if (!event) {
+        return null;
+    }
 
-  if (data.name !== undefined) {
-    event.name = data.name;
-  }
+    if (data.name !== undefined) {
+        event.name = data.name;
+    }
 
-  if (data.date !== undefined) {
-    event.date = data.date;
-  }
+    if (data.date !== undefined) {
+        event.date = data.date;
+    }
 
-  if (data.capacity !== undefined) {
-    event.capacity = Number(data.capacity);
-  }
+    if (data.capacity !== undefined) {
+        event.capacity = Number(data.capacity);
+    }
 
-  if (data.registrationCount !== undefined) {
-    event.registrationCount = Number(data.registrationCount);
-  }
+    if (data.registrationCount !== undefined) {
+        event.registrationCount = Number(data.registrationCount);
+    }
 
-  return event;
+    return event;
 }
 
 export function deleteEvent(id: number) {
-  const index = event.findIndex(e => e.id === id);
+    const index = event.findIndex(e => e.id === id);
 
-  if (index === -1) {
-    return null;
-  }
+    if (index === -1) {
+        return null;
+    }
 
-  const deletedEvent = event.splice(index, 1)[0];
-  return deletedEvent;
+    const deletedEvent = event.splice(index, 1)[0];
+    return deletedEvent;
 }
 
-    
