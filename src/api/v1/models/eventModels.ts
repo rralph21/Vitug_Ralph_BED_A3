@@ -1,7 +1,11 @@
 export interface Event {
-    id: string;
-    userId: string;
-    content: string;
-    createdAt: Date;
-    updateAt: Date;
+  id: string;
+  name: string;
+  date: string;
+  capacity: number;
+  registrationCount: number;
+  status: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
 }
