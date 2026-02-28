@@ -3,8 +3,8 @@ import { HTTP_STATUS } from "../../../constant/httpConstant";
 import * as eventService from "../services/eventServices";
 
 // Get all events
-export const getEvents = (req: Request, res: Response): void => {
-    const events = eventService.getAllEvents();
+export const getEvents = async(req: Request, res: Response): Promise<void> => {
+    const events = await eventService.getAllEvents();
 
     res.status(HTTP_STATUS.OK).json({
         message: "Events is collected",
