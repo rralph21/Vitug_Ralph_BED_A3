@@ -44,9 +44,35 @@ export const createEventAsync = async (
 
 // get event by id
 export const getEventByIdAsync = async (id: string): Promise<sampleEvent | null> => {
-  const docSnap = await db.collection("events").doc(id).get();
+    const docSnap = await db.collection("events").doc(id).get();
 
-  if (!docSnap.exists) return null;
+    if (!docSnap.exists) return null;
 
-  return docSnap.data() as sampleEvent;
+    return docSnap.data() as sampleEvent;
+};
+
+// update event
+
+export const updateEventByIdAsync = async (
+    id: string,
+    patch: Partial<sampleEvent>
+): Promise<sampleEvent | null> => {
+    const ref = db.collection("events").doc(id);
+    const snap = await ref.get();
+
+    if (!snap.exists) return null;
+
+    const existing = snap.data() as sampleEvent;
+
+
+    const updated: sampleEvent = {
+        ...existing,
+        ...patch,
+        updatedAt: new Date().toISOString(),
+    };
+
+    if (updated.registrationCount > updated.capacity) return null;
+
+    await ref.set(updated, { merge: false });
+    return updated;
 };
