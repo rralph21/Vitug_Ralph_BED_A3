@@ -41,16 +41,12 @@ export const createEventAsync = async (
 
     return newDoc;
 };
-// export const addDocument = async (): Promise<void> => {
-//     // Create a reference to a document in the 'users' collection with ID 'user1'
-//     // If the document doesn't exist, it will be created
-//     const docRef: DocumentReference = db.collection("events").doc("event1");
 
-//     // Use the `set` method to add or overwrite data in the document
-//     // The data is passed as an object with fields and their values
-//     await docRef.set({
-//         name: "John Doe",
-//         email: "john@example.com",
-//         age: 30,
-//     });
-//     console.log("Document added");
+// get event by id
+export const getEventByIdAsync = async (id: string): Promise<sampleEvent | null> => {
+  const docSnap = await db.collection("events").doc(id).get();
+
+  if (!docSnap.exists) return null;
+
+  return docSnap.data() as sampleEvent;
+};
