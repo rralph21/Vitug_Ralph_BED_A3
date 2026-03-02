@@ -15,19 +15,19 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
 
 // Get event by :id async
 export const getEvent = async (req: Request, res: Response): Promise<void> => {
-  const id = req.params.id;
+    const id = req.params.id;
 
-  const event = await eventService.getEventByIdDb(id);
+    const event = await eventService.getEventByIdDb(id);
 
-  if (!event) {
-    res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Event not found" });
-    return;
-  }
+    if (!event) {
+        res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Event not found" });
+        return;
+    }
 
-  res.status(HTTP_STATUS.OK).json({
-    message: "Event is collected",
-    data: event,
-  });
+    res.status(HTTP_STATUS.OK).json({
+        message: "Event is collected",
+        data: event,
+    });
 };
 
 // Get popularity by :id
@@ -90,16 +90,15 @@ export const createEvent = async (req: Request, res: Response): Promise<void> =>
     });
 };
 
-// Put by :id
-export const updateEvent = (req: Request, res: Response): void => {
-    const id = Number(req.params.id);
+// Put by :id async
+export const updateEvent = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
 
-    if (!req.params.id) {
-        res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Missing id" });
-        return;
+    if (req.body.date instanceof Date) {
+        req.body.date = req.body.date.toISOString();
     }
 
-    const updated = eventService.updateEvent(id, req.body);
+    const updated = await eventService.updateEventDb(id, req.body);
 
     if (!updated) {
         res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Event not found" });
