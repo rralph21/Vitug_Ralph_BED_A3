@@ -111,10 +111,11 @@ export const updateEvent = async (req: Request, res: Response): Promise<void> =>
     });
 };
 
-// Delete by :id
-export const deleteEvent = (req: Request, res: Response): void => {
-    const id = Number(req.params.id);
-    const deleted = eventService.deleteEvent(id);
+// Delete by :id async
+export const deleteEvent = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+
+    const deleted = await eventService.deleteEventDb(id);
 
     if (!deleted) {
         res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Event not found" });
