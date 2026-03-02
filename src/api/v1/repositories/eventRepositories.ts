@@ -76,3 +76,17 @@ export const updateEventByIdAsync = async (
     await ref.set(updated, { merge: false });
     return updated;
 };
+
+// delete event
+
+export const deleteEventByIdAsync = async (id: string): Promise<sampleEvent | null> => {
+    const ref = db.collection("events").doc(id);
+    const snap = await ref.get();
+
+    if (!snap.exists) return null;
+
+    const existing = snap.data() as sampleEvent;
+    await ref.delete();
+
+    return existing;
+};
