@@ -45,25 +45,37 @@ export const createEventAsync = async (
 // get event by id
 export const getEventByIdAsync = async (id: string): Promise<sampleEvent | null> => {
     const docSnap = await db.collection("events").doc(id).get();
+    if (docSnap.exists) return docSnap.data() as sampleEvent;
 
-    if (!docSnap.exists) return null;
+    const querySnap = await db.collection("events").where("id", "==", id).limit(1).get();
+    if (querySnap.empty) return null;
 
-    return docSnap.data() as sampleEvent;
+    return querySnap.docs[0].data() as sampleEvent;
 };
 
 // update event
 
+const findEventDocRefByEventId = async (eventId: string) => {
+   
+    const directRef = db.collection("events").doc(eventId);
+    const directSnap = await directRef.get();
+    if (directSnap.exists) return directRef;
+
+    const snap = await db.collection("events").where("id", "==", eventId).limit(1).get();
+    if (snap.empty) return null;
+
+    return snap.docs[0].ref;
+};
+
 export const updateEventByIdAsync = async (
-    id: string,
+    eventId: string,
     patch: Partial<sampleEvent>
 ): Promise<sampleEvent | null> => {
-    const ref = db.collection("events").doc(id);
-    const snap = await ref.get();
+    const ref = await findEventDocRefByEventId(eventId);
+    if (!ref) return null;
 
-    if (!snap.exists) return null;
-
-    const existing = snap.data() as sampleEvent;
-
+    const docSnap = await ref.get();
+    const existing = docSnap.data() as sampleEvent;
 
     const updated: sampleEvent = {
         ...existing,
@@ -79,14 +91,13 @@ export const updateEventByIdAsync = async (
 
 // delete event
 
-export const deleteEventByIdAsync = async (id: string): Promise<sampleEvent | null> => {
-    const ref = db.collection("events").doc(id);
+export const deleteEventByIdAsync = async (eventId: string): Promise<sampleEvent | null> => {
+    const ref = await findEventDocRefByEventId(eventId);
+    if (!ref) return null;
+
     const snap = await ref.get();
-
-    if (!snap.exists) return null;
-
     const existing = snap.data() as sampleEvent;
-    await ref.delete();
 
+    await ref.delete();
     return existing;
 };
