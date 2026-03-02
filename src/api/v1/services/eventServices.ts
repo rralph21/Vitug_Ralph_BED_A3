@@ -1,5 +1,5 @@
 import { sampleEvent } from "../models/eventModels";
-import { getAllEventsAsync, createEventAsync } from "../repositories/eventRepositories";
+import { getAllEventsAsync, createEventAsync, getEventByIdAsync, updateEventByIdAsync } from "../repositories/eventRepositories";
 import { event } from "../data/eventData"
 
 
@@ -64,10 +64,8 @@ export function getEventById(id: number) {
     return event.find(e => e.id === id);
 }
 
-import { getEventByIdAsync } from "../repositories/eventRepositories";
-
 export const getEventByIdDb = async (id: string): Promise<sampleEvent | null> => {
-  return getEventByIdAsync(id);
+    return getEventByIdAsync(id);
 };
 
 // creating an event async
@@ -117,6 +115,26 @@ export function updateEvent(id: number, data: any) {
 
     return event;
 }
+
+// update event async
+export const updateEventDb = async (
+    id: string,
+    data: any
+): Promise<sampleEvent | null> => {
+    const patch: Partial<sampleEvent> = {};
+
+    if (data.name !== undefined) patch.name = String(data.name);
+    if (data.date !== undefined) patch.date = String(data.date);
+
+    if (data.capacity !== undefined) patch.capacity = Number(data.capacity);
+    if (data.registrationCount !== undefined)
+        patch.registrationCount = Number(data.registrationCount);
+
+    if (data.status !== undefined) patch.status = String(data.status);
+    if (data.category !== undefined) patch.category = String(data.category);
+
+    return updateEventByIdAsync(id, patch);
+};
 
 export function deleteEvent(id: number) {
     const index = event.findIndex(e => e.id === id);
