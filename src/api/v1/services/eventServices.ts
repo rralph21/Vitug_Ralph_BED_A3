@@ -64,21 +64,11 @@ export function getEventById(id: number) {
     return event.find(e => e.id === id);
 }
 
-// // creating an event
-// export function createEvent(name: string, date: string, capacity: number) {
-//     const newId = event.length + 1;
+import { getEventByIdAsync } from "../repositories/eventRepositories";
 
-//     const newEvent: Event = {
-//         id: newId,
-//         name,
-//         date,
-//         capacity,
-//         registrationCount: 0,
-//     };
-
-//     event.push(newEvent);
-//     return newEvent;
-// }
+export const getEventByIdDb = async (id: string): Promise<sampleEvent | null> => {
+  return getEventByIdAsync(id);
+};
 
 // creating an event async
 export const createEventDb = async (
