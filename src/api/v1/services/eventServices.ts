@@ -1,5 +1,11 @@
 import { sampleEvent } from "../models/eventModels";
-import { getAllEventsAsync, createEventAsync, getEventByIdAsync, updateEventByIdAsync } from "../repositories/eventRepositories";
+import {
+    getAllEventsAsync,
+    createEventAsync,
+    getEventByIdAsync,
+    updateEventByIdAsync,
+    deleteEventByIdAsync
+} from "../repositories/eventRepositories";
 import { event } from "../data/eventData"
 
 
@@ -147,3 +153,7 @@ export function deleteEvent(id: number) {
     return deletedEvent;
 }
 
+// delete event async
+export const deleteEventDb = async (id: string): Promise<sampleEvent | null> => {
+    return deleteEventByIdAsync(id);
+};
