@@ -1,8 +1,7 @@
 // Always mock firebase in every test
-jest.mock("../config/firebaseConfig", () => ({
+jest.mock("../src/config/firebaseConfig", () => ({
     db: {
         collection: jest.fn(),
-        doc: jest.fn(),
     },
 }));
 
