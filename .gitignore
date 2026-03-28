@@ -1,4 +1,9 @@
 node_modules/
 dist/
 ServiceKey.json/
+src/config/ServiceKey.json/
+.env/
+src/config/.env/
+ServiceKey.json/
 src/config/ServiceKey.json
+
