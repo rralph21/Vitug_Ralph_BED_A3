@@ -6,7 +6,7 @@ import setupSwagger from "./config/swagger";
 
 // Initialize Express application
 const app: Express = express();
-setupSwagger(app);
+
 
 app.use(express.json());
 
@@ -28,4 +28,6 @@ app.get("/api/v1/health", (req, res) => {
 app.get("/", (req, res) => {
     res.send("It's Online!!");
 });
+
+setupSwagger(app);
 export default app;
