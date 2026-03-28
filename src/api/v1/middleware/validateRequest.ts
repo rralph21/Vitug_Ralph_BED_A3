@@ -35,9 +35,9 @@ export const validateRequest = (
             shouldStrip: boolean
         ) => {
             const { error, value } = schema.validate(data, {
-                abortEarly: true,     // one message (matches your screenshots)
+                abortEarly: true, 
                 stripUnknown: shouldStrip,
-                convert: true,        // converts "10" -> 10 if possible
+                convert: true,  
             });
 
             if (error) {
