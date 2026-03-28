@@ -1,10 +1,12 @@
 import express, { Express } from "express";
 import eventRoutes from "./api/v1/routes/eventRoutes"
 import morgan from "morgan";
+import setupSwagger from "./config/swagger";
 
 
 // Initialize Express application
 const app: Express = express();
+setupSwagger(app);
 
 app.use(express.json());
 
