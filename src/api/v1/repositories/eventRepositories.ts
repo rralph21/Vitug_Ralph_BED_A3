@@ -29,8 +29,12 @@ export const createEventAsync = async (
 ): Promise<sampleEvent> => {
     const now = new Date().toISOString();
 
+<<<<<<< HEAD
+    const docRef = db.collection("events").doc();
+=======
     // Use the event's ID as the Firestore document ID for consistency
     const docRef = db.collection("events").doc(payload.id);
+>>>>>>> feature
 
     const newDoc: sampleEvent = {
         ...payload,

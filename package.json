@@ -3,7 +3,10 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+<<<<<<< HEAD
+=======
         "generate-docs": "ts-node scripts/generate-openapi.ts && npx @redocly/cli build-docs openapi.json --output docs/index.html",
+>>>>>>> feature
         "test": "jest",
         "start": "ts-node src/server.ts"
     },
@@ -12,6 +15,14 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
+<<<<<<< HEAD
+        "express": "^5.2.1",
+        "firebase-admin": "^13.6.1",
+        "joi": "^18.0.2",
+        "morgan": "^1.10.1"
+    },
+    "devDependencies": {
+=======
         "cors": "^2.8.6",
         "dotenv": "^17.3.1",
         "express": "^5.2.1",
@@ -25,14 +36,18 @@
     "devDependencies": {
         "@redocly/cli": "^2.25.2",
         "@types/cors": "^2.8.19",
+>>>>>>> feature
         "@types/express": "^5.0.6",
         "@types/jest": "^29.5.14",
         "@types/joi": "^17.2.2",
         "@types/morgan": "^1.9.10",
         "@types/node": "^22.19.13",
         "@types/supertest": "^7.2.0",
+<<<<<<< HEAD
+=======
         "@types/swagger-jsdoc": "^6.0.4",
         "@types/swagger-ui-express": "^4.1.8",
+>>>>>>> feature
         "jest": "^30.2.0",
         "supertest": "^7.2.2",
         "ts-jest": "^29.4.6",
