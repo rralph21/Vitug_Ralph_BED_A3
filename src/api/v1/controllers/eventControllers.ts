@@ -15,9 +15,9 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
 
 // Get event by :id async
 export const getEvent = async (req: Request, res: Response): Promise<void> => {
-    const id = req.params.id;
+    const id = Number(req.params.id);
 
-    const event = await eventService.getEventByIdDb(id);
+    const event = eventService.getEventById(id);
 
     if (!event) {
         res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Event not found" });

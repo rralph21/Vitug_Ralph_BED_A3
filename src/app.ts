@@ -1,8 +1,10 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
-
-// Load environment variables BEFORE your internal imports!
 dotenv.config();
+
+console.log(process.env)
+// Load environment variables BEFORE your internal imports!
+
 import eventRoutes from "./api/v1/routes/eventRoutes"
 import { apiHelmetConfig } from "./config/helmetConfig";
 import { getCorsOptions } from "./config/corsConfig";
@@ -11,16 +13,24 @@ import morgan from "morgan";
 import setupSwagger from "./config/swagger";
 
 
+const corsOptions = getCorsOptions();
 
 // Initialize Express application
 const app: Express = express();
 
+// Apply security headers first (before any routes)
+app.use(apiHelmetConfig);
 
-app.use(express.json());
-
+// Apply logging middleware
 app.use(morgan("combined"));
 
-app.use("/api/v1", eventRoutes)
+// Apply CORS middleware with options
+app.use(cors(getCorsOptions()));
+
+// Handle preflight requests for all routes
+app.options("/{*splat}", cors(corsOptions));
+
+app.use(express.json());
 
 // Sample healt check
 app.get("/api/v1/health", (req, res) => {
@@ -32,7 +42,14 @@ app.get("/api/v1/health", (req, res) => {
     });
 });
 
+// Define a route
+app.get("/", (req, res) => {
+    res.send("It's Online!!");
+});
+
+// Use event routes
+app.use("/api/v1", eventRoutes)
+
+// Setup Swagger documentation
 setupSwagger(app);
-app.use(apiHelmetConfig);
-app.use(cors(getCorsOptions()));
 export default app;
