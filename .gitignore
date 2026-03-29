@@ -1,3 +1,13 @@
 node_modules/
 dist/
+<<<<<<< HEAD
 ServiceKey.json
+=======
+ServiceKey.json/
+src/config/ServiceKey.json/
+.env/
+src/config/.env/
+ServiceKey.json/
+src/config/ServiceKey.json
+
+>>>>>>> feature
