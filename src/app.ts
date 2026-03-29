@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 // Load environment variables BEFORE your internal imports!
 dotenv.config();
 import eventRoutes from "./api/v1/routes/eventRoutes"
+import { apiHelmetConfig } from "./config/helmetConfig";
 import morgan from "morgan";
 import setupSwagger from "./config/swagger";
 
@@ -35,4 +36,5 @@ app.get("/", (req, res) => {
 });
 
 setupSwagger(app);
+app.use(apiHelmetConfig);
 export default app;
