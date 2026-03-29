@@ -32,11 +32,6 @@ app.get("/api/v1/health", (req, res) => {
     });
 });
 
-// Define a route
-app.get("/", (req, res) => {
-    res.send("It's Online!!");
-});
-
 setupSwagger(app);
 app.use(apiHelmetConfig);
 app.use(cors(getCorsOptions()));
