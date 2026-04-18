@@ -13,23 +13,6 @@ import { eventSchemas } from "../validation/eventValidation";
 
 const router = Router();
 
-<<<<<<< HEAD
-router.get("/events", getEvents);
-
-
-router.get(
-    "/events/:id",
-    validateRequest(eventSchemas.getById),
-    getEvent
-);
-
-router.get(
-    "/events/:id/popularity",
-    validateRequest(eventSchemas.getById),
-    getEventPopularity
-);
-
-=======
 /**
  * @swagger
  * /events:
@@ -97,16 +80,12 @@ router.get("/events", getEvents);
  *       500:
  *         description: Server error
  */
->>>>>>> feature
 router.post(
     "/events",
     validateRequest(eventSchemas.create),
     createEvent
 );
 
-<<<<<<< HEAD
-
-=======
 /**
  * @swagger
  * /events/{id}:
@@ -193,17 +172,12 @@ router.get(
  *       500:
  *         description: Server error
  */
->>>>>>> feature
 router.put(
     "/events/:id",
     validateRequest(eventSchemas.update),
     updateEvent
 );
 
-<<<<<<< HEAD
-router.delete("/events/:id", deleteEvent);
-
-=======
 /**
  * @swagger
  * /events/{id}:
@@ -296,5 +270,4 @@ router.get(
     getEventPopularity
 );
 
->>>>>>> feature
 export default router;

@@ -32,15 +32,7 @@ app.options("/{*splat}", cors(corsOptions));
 
 app.use(express.json());
 
-// Sample healt check
-app.get("/api/v1/health", (req, res) => {
-    res.json({
-        status: "OK",
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString(),
-        version: "1.0.0",
-    });
-});
+
 
 // Define a route
 app.get("/", (req, res) => {
@@ -52,4 +44,3 @@ app.use("/api/v1", eventRoutes)
 
 // Setup Swagger documentation
 setupSwagger(app);
-export default app;
