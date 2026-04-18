@@ -1,0 +1,566 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Event Management API Documentation",
+    "version": "1.0.0",
+    "description": "This is the API documentation for the Event Management application."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Local server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Event": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "date",
+          "capacity",
+          "registrationCount",
+          "status",
+          "category"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique event identifier",
+            "example": "123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Event name (3-60 characters)",
+            "minLength": 3,
+            "maxLength": 60,
+            "example": "Tech Conference 2024"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event date in ISO 8601 format (must be future date)",
+            "example": "2024-04-15T10:30:00Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "description": "Maximum number of attendees (5-10000)",
+            "minimum": 5,
+            "maximum": 10000,
+            "example": 500
+          },
+          "registrationCount": {
+            "type": "integer",
+            "description": "Current registrations (0-capacity). When status is 'completed', must equal capacity.",
+            "minimum": 0,
+            "example": 250
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "description": "Event status. Defaults to 'active'",
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "description": "Event category. Defaults to 'general'",
+            "example": "conference"
+          }
+        }
+      },
+      "CreateEventRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "date",
+          "capacity"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Event name (3-60 characters)",
+            "minLength": 3,
+            "maxLength": 60,
+            "example": "Tech Conference 2024"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event date in ISO 8601 format (must be future)",
+            "example": "2024-04-15T10:30:00Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "description": "Maximum attendees (5-10000)",
+            "minimum": 5,
+            "maximum": 10000,
+            "example": 500
+          },
+          "registrationCount": {
+            "type": "integer",
+            "description": "Current registrations. Defaults to 0. Must be <= capacity.",
+            "minimum": 0,
+            "example": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "description": "Event status. Defaults to 'active'",
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "description": "Event category. Defaults to 'general'",
+            "example": "conference"
+          }
+        }
+      },
+      "UpdateEventRequest": {
+        "type": "object",
+        "description": "At least one field must be provided. registrationCount must be <= capacity. When status is 'completed', registrationCount must equal capacity.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Event name (3-60 characters)",
+            "minLength": 3,
+            "maxLength": 60,
+            "example": "Updated Conference"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event date in ISO 8601 format (must be future)",
+            "example": "2024-05-15T10:30:00Z"
+          },
+          "capacity": {
+            "type": "integer",
+            "description": "Maximum attendees (5-10000)",
+            "minimum": 5,
+            "maximum": 10000,
+            "example": 750
+          },
+          "registrationCount": {
+            "type": "integer",
+            "description": "Current registrations. Must be <= capacity.",
+            "minimum": 0,
+            "example": 300
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ],
+            "description": "Event status",
+            "example": "active"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "conference",
+              "workshop",
+              "meetup",
+              "seminar",
+              "general"
+            ],
+            "description": "Event category",
+            "example": "workshop"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Validation failed"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/events": {
+      "get": {
+        "summary": "Get all events",
+        "description": "Retrieve a list of all events",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of events retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Events is collected"
+                    },
+                    "count": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Event"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new event",
+        "description": "Create a new event with validation. Required fields are name, date, and capacity.",
+        "tags": [
+          "Events"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Event created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Event created"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error - Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/events/{id}": {
+      "get": {
+        "summary": "Get a specific event",
+        "description": "Retrieve a single event by ID",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Event ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Event is collected"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID format"
+          },
+          "404": {
+            "description": "Event not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an event",
+        "description": "Update an existing event. At least one field must be provided.",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Event ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Event updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Event updated"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or invalid data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an event",
+        "description": "Delete an event by ID",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Event ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Event deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/events/{id}/popularity": {
+      "get": {
+        "summary": "Get event popularity",
+        "description": "Get popularity metrics for a specific event including popularity score and tier",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Event ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Popularity data retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Event popularity calculated"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "date": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "capacity": {
+                          "type": "number"
+                        },
+                        "registrationCount": {
+                          "type": "number"
+                        },
+                        "spotsRemaining": {
+                          "type": "number"
+                        },
+                        "popularityScore": {
+                          "type": "number"
+                        },
+                        "popularityTier": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID format"
+          },
+          "404": {
+            "description": "Event not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
